@@ -1,5 +1,6 @@
 package com.mycompany.javaweb.control;
 
+
 import com.mycompany.javaweb.dao.DAO;
 import com.mycompany.javaweb.entity.Account;
 import jakarta.servlet.ServletException;
