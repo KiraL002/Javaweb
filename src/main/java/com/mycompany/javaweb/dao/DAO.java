@@ -1,4 +1,4 @@
-package com.mycompany.javaweb.dao; // Đảm bảo Gói của bạn là đúng
+package com.mycompany.javaweb.dao;
 
 import com.mycompany.javaweb.context.DBContext;
 import com.mycompany.javaweb.entity.Account;
