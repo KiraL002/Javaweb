@@ -1,153 +1,158 @@
-CREATE DATABASE clothing_shop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+DROP DATABASE IF EXISTS clothing_shop;
+CREATE DATABASE clothing_shop
+	CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE clothing_shop;
 
 -- Bảng người dùng
 CREATE TABLE NguoiDung (
-    maND BIGINT AUTO_INCREMENT PRIMARY KEY,
-    tenDangNhap VARCHAR(50) UNIQUE NOT NULL,
-    matKhau VARCHAR(255) NOT NULL,
-    ten VARCHAR(100),
-    ngaySinh DATE,
-    gioiTinh VARCHAR(10),
-    diaChi VARCHAR(255),
-    soDienThoai VARCHAR(20),
-    ngayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    vaiTro VARCHAR(20) DEFAULT 'USER'
+                           maND BIGINT AUTO_INCREMENT PRIMARY KEY,
+                           tenDangNhap VARCHAR(50) UNIQUE NOT NULL,
+                           matKhau VARCHAR(255) NOT NULL,
+                           ten VARCHAR(100),
+                           ngaySinh DATE,
+                           gioiTinh VARCHAR(10),
+                           diaChi VARCHAR(255),
+                           soDienThoai VARCHAR(20),
+                           ngayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           vaiTro VARCHAR(20) DEFAULT 'USER',
+                           trangThai VARCHAR(20) DEFAULT 'ACTIVE'
 );
 
 -- Bảng danh mục
 CREATE TABLE DanhMuc (
-    maDM BIGINT AUTO_INCREMENT PRIMARY KEY,
-    ten VARCHAR(100),
-    hinhAnh VARCHAR(255)
+                         maDM BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         ten VARCHAR(100),
+                         hinhAnh VARCHAR(255)
 );
 
 -- Bảng thương hiệu
 CREATE TABLE ThuongHieu (
-    maTH BIGINT AUTO_INCREMENT PRIMARY KEY,
-    ten VARCHAR(100),
-    logo VARCHAR(255)
+                            maTH BIGINT AUTO_INCREMENT PRIMARY KEY,
+                            ten VARCHAR(100),
+                            logo VARCHAR(255)
 );
 
 -- Bảng quản trị viên
 CREATE TABLE QuanTriVien (
-    maQTV BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maND BIGINT,
-    email VARCHAR(100),
-    FOREIGN KEY (maND) REFERENCES NguoiDung(maND) ON DELETE CASCADE
+                             maQTV BIGINT AUTO_INCREMENT PRIMARY KEY,
+                             maND BIGINT,
+                             email VARCHAR(100),
+                             FOREIGN KEY (maND) REFERENCES NguoiDung(maND) ON DELETE CASCADE
 );
 
 -- Bảng nhân viên
 CREATE TABLE NhanVien (
-    maNV BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maND BIGINT,
-    email VARCHAR(100),
-    luong DECIMAL(15,2),
-    FOREIGN KEY (maND) REFERENCES NguoiDung(maND) ON DELETE CASCADE
+                          maNV BIGINT AUTO_INCREMENT PRIMARY KEY,
+                          maND BIGINT,
+                          email VARCHAR(100),
+                          luong DECIMAL(15,2),
+                          FOREIGN KEY (maND) REFERENCES NguoiDung(maND) ON DELETE CASCADE
 );
 
 -- Bảng khách hàng
 CREATE TABLE KhachHang (
-    maKH BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maND BIGINT,
-    diemTichLuy INT DEFAULT 0,
-    FOREIGN KEY (maND) REFERENCES NguoiDung(maND) ON DELETE CASCADE
+                           maKH BIGINT AUTO_INCREMENT PRIMARY KEY,
+                           maND BIGINT,
+                           diemTichLuy INT DEFAULT 0,
+                           FOREIGN KEY (maND) REFERENCES NguoiDung(maND) ON DELETE CASCADE
 );
 
 -- Bảng sản phẩm
 CREATE TABLE SanPham (
-    maSP BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maDM BIGINT,
-    maTH BIGINT,
-    ten VARCHAR(100),
-    moTa TEXT,
-    gia DECIMAL(15,2),
-    soLuong INT,
-    kichCo VARCHAR(50),
-    mauSac VARCHAR(50),
-    chatLieu VARCHAR(100),
-    hinhAnh VARCHAR(255),
-    daBan INT DEFAULT 0,
-    FOREIGN KEY (maDM) REFERENCES DanhMuc(maDM) ON DELETE SET NULL,
-    FOREIGN KEY (maTH) REFERENCES ThuongHieu(maTH) ON DELETE SET NULL
+                         maSP BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         maDM BIGINT,
+                         maTH BIGINT,
+                         ten VARCHAR(100),
+                         moTa TEXT,
+                         gia DECIMAL(15,2),
+                         soLuong INT,
+                         kichCo VARCHAR(50),
+                         mauSac VARCHAR(50),
+                         chatLieu VARCHAR(100),
+                         hinhAnh VARCHAR(255),
+                         daBan INT DEFAULT 0,
+                         FOREIGN KEY (maDM) REFERENCES DanhMuc(maDM) ON DELETE SET NULL,
+                         FOREIGN KEY (maTH) REFERENCES ThuongHieu(maTH) ON DELETE SET NULL
 );
 
 -- Bảng giỏ hàng
 CREATE TABLE GioHang (
-    maGH BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maKH BIGINT,
-    trangThai VARCHAR(50) DEFAULT 'Đang mua',
-    FOREIGN KEY (maKH) REFERENCES KhachHang(maKH) ON DELETE CASCADE
+                         maGH BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         maKH BIGINT,
+                         trangThai VARCHAR(50) DEFAULT 'Đang mua',
+                         FOREIGN KEY (maKH) REFERENCES KhachHang(maKH) ON DELETE CASCADE
 );
 
 -- Bảng đơn hàng
 CREATE TABLE DonHang (
-    maDH BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maKH BIGINT,
-    maNV BIGINT,
-    hoTen VARCHAR(100),
-    email VARCHAR(100),
-    soDienThoai VARCHAR(20),
-    diaChi VARCHAR(255),
-    tongTien DECIMAL(15,2),
-    phuongThucThanhToan VARCHAR(50),
-    trangThai VARCHAR(50) DEFAULT 'CHO_XAC_NHAN',
-    ngayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (maKH) REFERENCES KhachHang(maKH) ON DELETE CASCADE,
-    FOREIGN KEY (maNV) REFERENCES NhanVien(maNV) ON DELETE SET NULL
+                         maDH BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         maKH BIGINT,
+                         maNV BIGINT,
+                         hoTen VARCHAR(100),
+                         email VARCHAR(100),
+                         soDienThoai VARCHAR(20),
+                         diaChi VARCHAR(255),
+                         tongTien DECIMAL(15,2),
+                         phuongThucThanhToan VARCHAR(50),
+                         trangThai VARCHAR(50) DEFAULT 'CHO_XAC_NHAN',
+                         ngayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         FOREIGN KEY (maKH) REFERENCES KhachHang(maKH) ON DELETE CASCADE,
+                         FOREIGN KEY (maNV) REFERENCES NhanVien(maNV) ON DELETE SET NULL
 );
 
 -- Bảng chi tiết đơn hàng
 CREATE TABLE ChiTietDonHang (
-    maCTDH BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maDH BIGINT,
-    maSP BIGINT,
-    soLuong INT,
-    donGia DECIMAL(15,2),
-    thanhTien DECIMAL(15,2),
-    kichCo VARCHAR(50),
-    mauSac VARCHAR(50),
-    FOREIGN KEY (maDH) REFERENCES DonHang(maDH) ON DELETE CASCADE,
-    FOREIGN KEY (maSP) REFERENCES SanPham(maSP) ON DELETE CASCADE
+                                maCTDH BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                maDH BIGINT,
+                                maSP BIGINT,
+                                soLuong INT,
+                                donGia DECIMAL(15,2),
+                                thanhTien DECIMAL(15,2),
+                                kichCo VARCHAR(50),
+                                mauSac VARCHAR(50),
+                                FOREIGN KEY (maDH) REFERENCES DonHang(maDH) ON DELETE CASCADE,
+                                FOREIGN KEY (maSP) REFERENCES SanPham(maSP) ON DELETE CASCADE
 );
 
 -- Bảng chi tiết giỏ hàng
 CREATE TABLE ChiTietGioHang (
-    maCTGH BIGINT AUTO_INCREMENT PRIMARY KEY,
-    maGH BIGINT,
-    maSP BIGINT,
-    soLuong INT,
-    kichCo VARCHAR(50),
-    mauSac VARCHAR(50),
-    FOREIGN KEY (maGH) REFERENCES GioHang(maGH) ON DELETE CASCADE,
-    FOREIGN KEY (maSP) REFERENCES SanPham(maSP) ON DELETE CASCADE
+                                maCTGH BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                maGH BIGINT,
+                                maSP BIGINT,
+                                soLuong INT,
+                                kichCo VARCHAR(50),
+                                mauSac VARCHAR(50),
+                                FOREIGN KEY (maGH) REFERENCES GioHang(maGH) ON DELETE CASCADE,
+                                FOREIGN KEY (maSP) REFERENCES SanPham(maSP) ON DELETE CASCADE
 );
 
 -- =========================
 -- DỮ LIỆU MẪU
 -- =========================
 
-INSERT INTO NguoiDung VALUES
-(1,'admin','1','Quản Trị Viên',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','ADMIN'),
-(2,'user','$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTV5UiC','Người Dùng',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','USER');
+INSERT INTO NguoiDung
+(maND, tenDangNhap, matKhau, ten, ngaySinh, gioiTinh, diaChi, soDienThoai, ngayTao, vaiTro, trangThai)
+VALUES
+    (1,'admin','1','Quản Trị Viên',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','ADMIN','ACTIVE'),
+    (2,'user','$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTV5UiC','Người Dùng',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','USER','ACTIVE');
 
 INSERT INTO DanhMuc VALUES
-(1,'Áo Thun','https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500'),
-(2,'Quần Jeans','https://images.unsplash.com/photo-1542272604-787c3835535d?w=500'),
-(3,'Áo Khoác','https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500'),
-(4,'Đầm/Váy','https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500'),
-(5,'Áo Sơ Mi','https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500'),
-(6,'Quần Short','https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500'),
-(7,'Áo Len','https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500');
+                        (1,'Áo Thun','https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500'),
+                        (2,'Quần Jeans','https://images.unsplash.com/photo-1542272604-787c3835535d?w=500'),
+                        (3,'Áo Khoác','https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500'),
+                        (4,'Đầm/Váy','https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500'),
+                        (5,'Áo Sơ Mi','https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500'),
+                        (6,'Quần Short','https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500'),
+                        (7,'Áo Len','https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500');
 
 INSERT INTO ThuongHieu VALUES
-(1,'Nike','https://logos-world.net/wp-content/uploads/2020/04/Nike-Logo.png'),
-(2,'Adidas','https://logos-world.net/wp-content/uploads/2020/04/Adidas-Logo.png'),
-(3,'Zara','https://logos-world.net/wp-content/uploads/2020/04/Zara-Logo.png'),
-(4,'Uniqlo','https://logos-world.net/wp-content/uploads/2020/12/Uniqlo-Logo.png'),
-(5,'H&M','https://logos-world.net/wp-content/uploads/2020/04/HM-Logo.png'),
-(6,'Gucci','https://logos-world.net/wp-content/uploads/2020/04/Gucci-Logo.png'),
-(7,'Puma','https://logos-world.net/wp-content/uploads/2020/04/Puma-Logo.png');
+                           (1,'Nike','https://logos-world.net/wp-content/uploads/2020/04/Nike-Logo.png'),
+                           (2,'Adidas','https://logos-world.net/wp-content/uploads/2020/04/Adidas-Logo.png'),
+                           (3,'Zara','https://logos-world.net/wp-content/uploads/2020/04/Zara-Logo.png'),
+                           (4,'Uniqlo','https://logos-world.net/wp-content/uploads/2020/12/Uniqlo-Logo.png'),
+                           (5,'H&M','https://logos-world.net/wp-content/uploads/2020/04/HM-Logo.png'),
+                           (6,'Gucci','https://logos-world.net/wp-content/uploads/2020/04/Gucci-Logo.png'),
+                           (7,'Puma','https://logos-world.net/wp-content/uploads/2020/04/Puma-Logo.png');
 
 INSERT INTO SanPham (maDM, maTH, ten, moTa, gia, soLuong, kichCo, mauSac, chatLieu, hinhAnh, daBan) VALUES
 -- Áo Thun (6 sản phẩm)
