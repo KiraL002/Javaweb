@@ -131,11 +131,17 @@ CREATE TABLE ChiTietGioHang (
 -- =========================
 
 INSERT INTO NguoiDung
-(maND, tenDangNhap, matKhau, ten, ngaySinh, gioiTinh, diaChi, soDienThoai, ngayTao, vaiTro, trangThai)
+(tenDangNhap, matKhau, ten, ngaySinh, gioiTinh, diaChi, soDienThoai, ngayTao, vaiTro, trangThai)
 VALUES
-    (1,'admin','1','Quản Trị Viên',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','ADMIN','ACTIVE'),
-    (2,'user','$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTV5UiC','Người Dùng',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','USER','ACTIVE');
-
+    ('admin','1','Quản Trị Viên',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','ADMIN','ACTIVE'),
+    ('user','2','Người Dùng',NULL,NULL,NULL,NULL,'2025-10-14 00:14:54','USER','ACTIVE'),
+    ('nhanvien1','24','Lê Văn An','1995-05-15','Nam','45 Trần Hưng Đạo, Quận 1, TPHCM','0901234567',NOW(),'EMPLOYEE','ACTIVE'),
+    ('khachhangvip','423','Nguyễn Thị Bích','1998-11-20','Nữ','100 Lê Lợi, Quận 3, TPHCM','0912345678',NOW(),'USER','ACTIVE'),
+    ('khachhangthuong','342','Trần Văn Cường','2000-01-01','Nam','20 Phan Văn Trị, Hà Nội','0923456789',NOW(),'USER','ACTIVE');
+INSERT INTO KhachHang (maND, diemTichLuy) VALUES
+                                              (2, 0),        -- user (maND = 2)
+                                              (4, 850),      -- khachhangvip Nguyễn Thị Bích
+                                              (5, 120);      -- khachhangthuong Trần Văn Cường
 INSERT INTO DanhMuc VALUES
                         (1,'Áo Thun','https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500'),
                         (2,'Quần Jeans','https://images.unsplash.com/photo-1542272604-787c3835535d?w=500'),
@@ -196,5 +202,47 @@ INSERT INTO SanPham (maDM, maTH, ten, moTa, gia, soLuong, kichCo, mauSac, chatLi
 (7,6,'Áo len Gucci','Áo len vải thun cotton Gucci',1500000.00,40,'M,L,XL','Đen','Vải thun cotton','https://media.gucci.com/style/DarkGray_Center_0_0_2400x2400/1757932225/838450_XJHJO_1043_003_100_0000_Light-Brushed-cotton-jersey-sweatshirt.jpg',40),
 (7,5,'Áo nỉ H&M','Áo nỉ dáng thụng H&M Basics',399000.00,45,'XS,S,M,L','Xanh Navy','Cotton, Polyester','https://image.hm.com/assets/hm/d2/29/d229e5925fab8f6b9db1cdf4f386a269616e632b.jpg?imwidth=2160',60),
 (7,3,'Áo len Zara','Áo len Polo cổ tay Zara',1280000.00,30,'S,M,L,XL','Navy Blue','Cotton, Polyester','https://static.zara.net/assets/public/7f3d/981f/a95a48fda38b/12e72a1415da/00526310401-a1/00526310401-a1.jpg?ts=1754995160359&w=1125',65);
+
+
+-- Đơn hàng
+INSERT INTO DonHang (maKH, maNV, hoTen, email, soDienThoai, diaChi, tongTien, phuongThucThanhToan, trangThai, ngayTao) VALUES
+(2, NULL, 'Nguyễn Thị Bích', 'bich.nt@gmail.com', '0912345678', '100 Lê Lợi, Quận 3, TPHCM', 3650000.00, 'Thẻ tín dụng', 'DA_GIAO_HANG', '2025-11-05 14:20:30');
+
+-- Đơn 2: Trần Văn Cường (maKH=3) – mua đồ bình dân
+INSERT INTO DonHang (maKH, maNV, hoTen, email, soDienThoai, diaChi, tongTien, phuongThucThanhToan, trangThai, ngayTao) VALUES
+(3, NULL, 'Trần Văn Cường', 'cuongtc@gmail.com', '0923456789', '20 Phan Văn Trị, Hà Nội', 1480000.00, 'COD', 'DANG_GIAO', '2025-11-12 09:15:45');
+
+-- Đơn 3: Nguyễn Thị Bích lại mua thêm (VIP hay mua nhiều)
+INSERT INTO DonHang (maKH, maNV, hoTen, email, soDienThoai, diaChi, tongTien, phuongThucThanhToan, trangThai, ngayTao) VALUES
+(2, NULL, 'Nguyễn Thị Bích', 'bich.nt@gmail.com', '0912345678', '100 Lê Lợi, Quận 3, TPHCM', 2490000.00, 'Chuyển khoản', 'DA_GIAO_HANG', '2025-11-18 19:40:10');
+
+-- Đơn 4: Khách thường mua thêm (đang chờ xác nhận)
+INSERT INTO DonHang (maKH, maNV, hoTen, email, soDienThoai, diaChi, tongTien, phuongThucThanhToan, trangThai, ngayTao) VALUES
+(3, NULL, 'Trần Văn Cường', 'cuongtc@gmail.com', '0923456789', '20 Phan Văn Trị, Hà Nội', 930000.00, 'COD', 'CHO_XAC_NHAN', NOW());
+
+INSERT INTO ChiTietDonHang (maDH, maSP, soLuong, donGia, thanhTien, kichCo, mauSac) VALUES
+(1, 6, 1, 1300000.00, 1300000.00, 'M', 'Đen'),      -- Áo thun Gucci Logo
+(1, 18, 1, 850000.00, 850000.00, 'M', 'Đen'),       -- Đầm dạ hội Gucci
+(1, 26, 1, 1500000.00, 1500000.00, 'L', 'Đen');     -- Áo len Gucci
+
+-- Đơn 2 (maDH = 2) → tổng 1.480.000
+INSERT INTO ChiTietDonHang (maDH, maSP, soLuong, donGia, thanhTien, kichCo, mauSac) VALUES
+(1, 5, 2, 250000.00, 500000.00, 'M', 'Trắng'),      -- Áo thun H&M Basic
+(2, 10, 1, 450000.00, 450000.00, '32', 'Xanh trung'), -- Quần jeans H&M Regular
+(2, 15, 1, 650000.00, 650000.00, 'M', 'Xanh pastel');  -- Áo khoác Uniqlo Ultra Light
+
+-- Đơn 3 (maDH = 3) → tổng 2.490.000
+INSERT INTO ChiTietDonHang (maDH, maSP, soLuong, donGia, thanhTien, kichCo, mauSac) VALUES
+(3, 1, 2, 350000.00, 700000.00, 'L', 'Đen'),        -- Áo thun Nike Sportswear
+(3, 13, 1, 1200000.00, 1200000.00, 'L', 'Đen'),     -- Áo khoác Nike Windrunner
+(3, 9, 1, 550000.00, 550000.00, '28', 'Đen'),       -- Quần jeans Zara Skinny
+(3, 21, 1, 480000.00, 480000.00, 'L', 'Xanh trắng'); -- Áo sơ mi kẻ sọc H&M
+
+-- Đơn 4 (maDH = 4) → tổng 930.000 (đang chờ)
+INSERT INTO ChiTietDonHang (maDH, maSP, soLuong, donGia, thanhTien, kichCo, mauSac) VALUES
+(4, 4, 1, 250000.00, 250000.00, 'L', 'Xanh navy'),  -- Áo thun Uniqlo Airism
+(4, 23, 1, 350000.00, 350000.00, 'L', 'Đen'),       -- Quần short Nike Sport
+(4, 27, 1, 399000.00, 399000.00, 'M', 'Xanh Navy'); -- Áo nỉ H&M
+
 
 SELECT * FROM sanpham
