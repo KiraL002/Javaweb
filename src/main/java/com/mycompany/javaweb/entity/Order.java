@@ -8,6 +8,7 @@ import java.util.List;
  * ĐÃ CẬP NHẬT: Mở rộng để khớp với JSON schema (thêm địa chỉ, SĐT, v.v.)
  */
 public class Order {
+
     private String orderNumber;
     // THAY ĐỔI: từ int id -> String
     private String userEmail;
