@@ -8,7 +8,8 @@ import java.util.List;
  * ĐÃ CẬP NHẬT: Mở rộng để khớp với JSON schema (thêm địa chỉ, SĐT, v.v.)
  */
 public class Order {
-    private String orderNumber; // THAY ĐỔI: từ int id -> String
+    private String orderNumber;
+    // THAY ĐỔI: từ int id -> String
     private String userEmail;
     private List<CartItem> items;
     private long subtotal;
@@ -22,6 +23,7 @@ public class Order {
     private String phone;
     private String paymentMethod;
 
+    public Order() {}
     // Hàm tạo (constructor) đã được cập nhật
     public Order(String orderNumber, String userEmail, List<CartItem> items, 
                  long subtotal, long shipping, long total, Date createdDate, 

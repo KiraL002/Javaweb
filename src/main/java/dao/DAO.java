@@ -1,4 +1,4 @@
-package com.mycompany.javaweb.dao; // Đảm bảo Gói của bạn là đúng
+package com.mycompany.javaweb.dao;
 
 import com.mycompany.javaweb.context.DBContext;
 import com.mycompany.javaweb.entity.Account;
@@ -215,6 +215,7 @@ public class DAO {
         return null; // Sai tên đăng nhập hoặc mật khẩu
     }
 
+
     public boolean checkAccountExists(String username) {
         String query = "SELECT COUNT(*) FROM NguoiDung WHERE tenDangNhap = ?";
         try {
@@ -293,7 +294,6 @@ public class DAO {
         }
     }
 
-
     public boolean checkOldPassword(long userId, String oldPassword) {
         String query = "SELECT matKhau FROM NguoiDung WHERE maND = ?";
         try {
@@ -321,9 +321,10 @@ public class DAO {
         } catch (SQLException e) { Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, e); } 
         finally { closeConnections(); }
     }
-    
-    public void updateAccountInfo(long userId, String fullName, String phone, String address) { /* ... (giữ nguyên) ... */ }
-    
+    public void updateAccountInfo(long userId, String fullName, String phone, String address) {
+        //Chua lam
+    }
+
     // --- (Các hàm còn lại giữ nguyên) ---
     public List<Order> getOrdersByUserEmail(String userEmail) { return new ArrayList<>(); }
     public void clearCart(String userEmail) { }
@@ -591,10 +592,39 @@ public class DAO {
         acc.setPhone(rs.getString("soDienThoai"));
         acc.setCreatedDate(rs.getTimestamp("ngayTao"));
         acc.setRole(rs.getString("vaiTro"));
-        
+        acc.setStatus(rs.getString("trangThai"));
+
         acc.setCustomerId(rs.getLong("maKH"));
         acc.setPoints(rs.getInt("diemTichLuy"));
         
         return acc;
     }
+
+    // ======================================================================
+    // === CÁC HÀM ĐƠN HÀM
+    // ======================================================================
+
+    private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
+            Order o = new Order();
+            o.setOrderNumber(String.valueOf(rs.getLong("maDH"))); // chuyển BIGINT sang String
+            o.setUserEmail(rs.getString("email"));
+
+            // Nếu bạn có bảng chi tiết giỏ hàng, items có thể load sau
+            o.setItems(null); // hoặc gọi hàm loadCartItems(maDH)
+
+            o.setSubtotal(rs.getLong("tongTien")); // tạm set subtotal = total nếu chưa có shipping
+            o.setShipping(0); // nếu chưa có thông tin shipping
+            o.setTotal(rs.getLong("tongTien")); // total = tongTien trong DB
+
+            o.setCreatedDate(rs.getTimestamp("ngayTao")); // Timestamp -> java.util.Date
+            o.setStatus(rs.getString("trangThai"));
+
+            o.setShippingAddress(rs.getString("diaChi"));
+            o.setPhone(rs.getString("soDienThoai"));
+            o.setPaymentMethod(rs.getString("phuongThucThanhToan"));
+
+            return o;
+        }
+
+
 }

@@ -1,6 +1,10 @@
 D:\Java\javaweb\src\main\java\context\DBContext.java
 D:\Java\javaweb\src\main\java\control\AccountControl.java
 D:\Java\javaweb\src\main\java\control\AddToCartControl.java
+D:\Java\javaweb\src\main\java\control\Admin\AdminManagementControl.java
+D:\Java\javaweb\src\main\java\control\Admin\OrderAdminController.java
+D:\Java\javaweb\src\main\java\control\Admin\ProductAdminController.java
+D:\Java\javaweb\src\main\java\control\Admin\UserAdminController.java
 D:\Java\javaweb\src\main\java\control\CartActionControl.java
 D:\Java\javaweb\src\main\java\control\CartControl.java
 D:\Java\javaweb\src\main\java\control\CheckoutControl.java
@@ -11,6 +15,7 @@ D:\Java\javaweb\src\main\java\control\LogoutControl.java
 D:\Java\javaweb\src\main\java\control\ShopControl.java
 D:\Java\javaweb\src\main\java\control\SignUpControl.java
 D:\Java\javaweb\src\main\java\control\UpdateProfileControl.java
+D:\Java\javaweb\src\main\java\dao\AdminDAO.java
 D:\Java\javaweb\src\main\java\dao\DAO.java
 D:\Java\javaweb\src\main\java\entity\Account.java
 D:\Java\javaweb\src\main\java\entity\Brand.java
