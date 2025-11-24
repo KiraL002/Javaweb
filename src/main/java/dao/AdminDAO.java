@@ -3,7 +3,9 @@ package com.mycompany.javaweb.dao;
 
 import com.mycompany.javaweb.context.DBContext;
 import com.mycompany.javaweb.entity.Account;
+import com.mycompany.javaweb.entity.CartItem;
 import com.mycompany.javaweb.entity.Order;
+import entity.OrderItem;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -68,6 +70,7 @@ public class AdminDAO {
         }
         finally { closeConnections(); }
     }
+    
 //   ----------------- ORDERS -------------------
 
     public List<Order> getAllOrders() {
@@ -126,7 +129,50 @@ public class AdminDAO {
             closeConnections();
         }
     }
-
+    public Order getOrderById(String id){
+        String query = "SELECT * FROM donhang WHERE maDH = ?";
+        Order o = new Order();
+        try{
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);  
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+                o = mapResultSetToOrder(rs);
+        }
+        catch(SQLException e){
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, "Lỗi SQL trong removeCartItem", e);
+        } finally { 
+            closeConnections();
+        }
+        return o;
+    }
+    public List<OrderItem> getOrderItemsByOrderId(String orderId){
+        List<OrderItem> items = new ArrayList<>();
+        String query = """
+                       SELECT * 
+                        FROM ChiTietDonHang ctdh
+                        JOIN SanPham sp ON ctdh.maSP = sp.maSP
+                        WHERE ctdh.maDH = ?
+                       """;
+        try{
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);  
+            ps.setString(1,orderId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                OrderItem item = mapResultSetToOrderItem(rs);
+                items.add(item);
+            }
+                
+        }
+        catch(SQLException e){
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, "Lỗi SQL trong removeCartItem", e);
+        } finally { 
+            closeConnections();
+        }
+        return items;
+    }
 //   ------------------- MAP ----------------------
 
     private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
@@ -148,7 +194,7 @@ public class AdminDAO {
 
         return acc;
     }
-    private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
+        private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
         Order o = new Order();
         o.setOrderId(rs.getLong("maDH"));
         o.setUserId(rs.getLong("maKH"));
@@ -171,7 +217,23 @@ public class AdminDAO {
         return o;
     }
 
-    private void closeConnections() {
+        
+private OrderItem mapResultSetToOrderItem(ResultSet rs) throws SQLException {
+    OrderItem item = new OrderItem();
+    
+    item.setOrderDetailId(rs.getLong("maCTDH"));
+    item.setProductId(rs.getLong("maSP"));
+    item.setQuantity(rs.getInt("soLuong"));
+    item.setUnitPrice(rs.getDouble("donGia")); // Giá cố định lúc đặt hàng
+    item.setSize(rs.getString("kichCo"));
+    item.setColor(rs.getString("mauSac"));
+    item.setProductName(rs.getString("ten"));
+    item.setSubtotal(rs.getDouble("thanhTien")); // Map cột thanhTien
+    
+    return item;
+}
+
+private void closeConnections() {
         try {
             if (rs != null) rs.close();
             if (ps != null) ps.close();

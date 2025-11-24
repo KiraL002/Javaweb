@@ -60,7 +60,8 @@
                     </td>
 
                     <td class="px-4 py-2 text-center ">
-                        <button type="button" class="px-3 py-1">Xem</button>
+                        <button type="button" class="px-3 py-1">
+                            <a href="admin/order/${o.orderId}">Xem</a></button>
                     </td>
 
 
