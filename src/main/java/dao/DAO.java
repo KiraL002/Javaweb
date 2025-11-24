@@ -1,6 +1,5 @@
 package com.mycompany.javaweb.dao;
 
-
 import com.mycompany.javaweb.context.DBContext;
 import com.mycompany.javaweb.entity.Account;
 import com.mycompany.javaweb.entity.Brand;
