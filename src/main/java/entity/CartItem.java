@@ -1,5 +1,6 @@
 package com.mycompany.javaweb.entity;
 
+
 /**
  * FILE NÀY THAY THẾ HOÀN TOÀN FILE CŨ.
  * Đây là một POJO (Plain Old Java Object) đại diện cho một mục trong giỏ hàng.

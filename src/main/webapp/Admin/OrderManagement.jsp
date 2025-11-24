@@ -11,89 +11,73 @@
 
         <thead class="bg-gray-100">
         <tr>
-            <th class="px-4 py-2 text-left text-gray-700">Mã đơn</th>
+            <th class="px-4 py-2 text-left text-gray-700">Ngày đặt</th>
             <th class="px-4 py-2 text-left text-gray-700">Khách hàng</th>
             <th class="px-4 py-2 text-left text-gray-700">Tổng tiền</th>
             <th class="px-4 py-2 text-left text-gray-700">Trạng thái đơn</th>
-            <th class="px-4 py-2 text-left text-gray-700">Thanh toán</th>
+            <th class="px-4 py-2 text-left text-gray-700">Phương thức thanh toán</th>
             <th class="px-4 py-2 text-left text-gray-700">Chi tiết</th>
         </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-<%--        <c:forEach var="o" items="${orders}" varStatus="status">--%>
+        <c:forEach var="o" items="${orders}">
+                <tr data-id="${o.userId}"
+                    class="odd:bg-gray-50 even:bg-white even:hover:bg-gray-100 odd:hover:bg-gray-100">
 
-<%--            <form action="admin/users" method="post">--%>
-<%--                <input type="hidden" name="userId" value="${o.orderNumber}" />--%>
+                    <td class="px-4 py-2">
+                        <fmt:formatDate value="${o.createdDate}" pattern="HH:mm dd/MM/yyyy" />
+                    </td>
 
-<%--                <tr data-id="${o.userId}"--%>
-<%--                    class="odd:bg-gray-50 even:bg-white even:hover:bg-gray-100 odd:hover:bg-gray-100">--%>
+                    <td class="px-4 py-2">
+                        ${o.userName}
+                    </td>
 
-<%--                    <td class="px-4 py-2">${status.index+1}</td>--%>
+                    <td class="px-4 py-2">
+                       <fmt:formatNumber value="${o.total}" type="number" groupingUsed="true"/> <u>đ</u>
+                       
+                    </td>
+                    
+                    <td class="px-4 py-2">
+                        <form action="admin/orders" method="post">
+                             <input type="hidden" name="orderId" value="${o.orderId}" />     
+                             <select class="border px-2 py-1 " name="status"onchange="this.form.submit()">
+                                 <option value="PENDING" ${o.status=='PENDING' ? 'selected' : ''}>Chờ xác nhận</option>
+                                 <option value="SHIPPED" ${o.status=='SHIPPED' ? 'selected' : ''}>Đang giao</option>
+                                 <option value="DELIVERED" ${o.status=='DELIVERED' ? 'selected' : ''}>Giao thành công</option>
+                                 <option value="CANCELLED" ${o.status=='CANCELLED' ? 'selected' : ''}>Đã hủy</option>
+                                 <option value="RETURNED" ${o.status=='RETURNED' ? 'selected' : ''}>Trả hàng hoàn tiền</option>
+                             </select>
+                         </form>
+                    </td>
+                    <td class="px-4 py-2">
+                        <form action="admin/orders" method="post">
+                            <input type="hidden" name="orderId" value="${o.orderId}"/>
+                            <select class="border px-2 py-1" name="paymentMethod"onchange="this.form.submit()">
+                                <option value="CASH" ${o.paymentMethod=="CASH" ? 'selected' : '' }>Thanh toán khi nhận hàng</option>
+                                <option value="TRANSFER" ${o.paymentMethod=="TRANSFER" ? 'selected' : '' }>Chuyển khoản</option>
+                            </select>
+                        </form>
+                    </td>
 
-<%--                    <td class="px-4 py-2">--%>
-<%--                        <span class="view" data-field="username">${o.username}</span>--%>
-<%--                        <input class="edit hidden border px-2 py-1" type="text" name="username"--%>
-<%--                               value="${o.username}" />--%>
-<%--                    </td>--%>
+                    <td class="px-4 py-2 text-center ">
+                        <button type="button" class="px-3 py-1">Xem</button>
+                    </td>
 
-<%--                    <td class="px-4 py-2">--%>
-<%--                        <span class="view" data-field="phone">${o.phone}</span>--%>
-<%--                        <input class="edit hidden border px-2 py-1" type="text" name="phone" value="${o.phone}" />--%>
-<%--                    </td>--%>
 
-<%--                    <td class="px-4 py-2">--%>
-<%--                        <span class="view" data-field="role">${o.role}</span>--%>
-<%--                        <select class="edit hidden border px-2 py-1" name="role">--%>
-<%--                            <option value="USER" ${o.role=="USER" ? 'selected' : '' }>USER</option>--%>
-<%--                            <option value="ADMIN" ${o.role=="ADMIN" ? 'selected' : '' }>ADMIN</option>--%>
-<%--                            <option value="STAFF" ${o.role=="STAFF" ? 'selected' : '' }>STAFF</option>--%>
-<%--                        </select>--%>
-<%--                    </td>--%>
-
-<%--                    <td class="px-4 py-2">--%>
-<%--                <span class="view px-2 py-1 rounded-full text-white--%>
-<%--                      ${o.status == 'ACTIVE' ? 'bg-green-500' : 'bg-red-500' } text-sm font-semibold" name="status">--%>
-<%--                        ${o.status}--%>
-<%--                </span>--%>
-<%--                        <select class="edit hidden border px-2 py-1" name="status">--%>
-<%--                            <option value="ACTIVE" ${o.status=="ACTIVE" ? 'selected' : '' }>ACTIVE</option>--%>
-<%--                            <option value="SUSPENDED" ${o.status=="SUSPENDED" ? 'selected' : '' }>SUSPENDED</option>--%>
-<%--                        </select>--%>
-<%--                    </td>--%>
-
-<%--                    <td class="px-4 py-2 flex space-x-2">--%>
-
-<%--                    <span class="view">--%>
-<%--                        <button type="button">--%>
-<%--                            <i class="edit-btn fa-solid fa-pen-to-square text-blue-500 hover:text-blue-700"--%>
-<%--                               title="Chỉnh sửa"></i>--%>
-<%--                        </button>--%>
-
-<%--                        <button type="button">--%>
-<%--                            <i class="fa-solid fa-trash text-red-500 hover:text-red-700"--%>
-<%--                               title="Xóa vĩnh viễn"></i>--%>
-<%--                        </button>--%>
-<%--                    </span>--%>
-
-<%--                        <span class="edit hidden">--%>
-<%--                        <button type="submit">--%>
-<%--                            <i class="save-btn fa-solid fa-floppy-disk text-green-500 hover:text-green-700"--%>
-<%--                               title="Lưu"></i>--%>
-<%--                        </button>--%>
-<%--                        <button type="button">--%>
-<%--                            <i class="cancel-btn fa-solid fa-x text-black-500 hover:text-black-700"--%>
-<%--                               title="Hủy"></i>--%>
-<%--                        </button>--%>
-<%--                    </span>--%>
-<%--                    </td>--%>
-
-<%--                </tr>--%>
-<%--            </form>--%>
-<%--        </c:forEach>--%>
+                </tr>
+            
+        </c:forEach>
 
         </tbody>
     </table>
 
 </div>
 
+    <script>
+
+
+
+
+
+    </script>
 </body>

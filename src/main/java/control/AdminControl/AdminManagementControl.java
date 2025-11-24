@@ -1,4 +1,4 @@
-package com.mycompany.javaweb.control.Admin;
+package com.mycompany.javaweb.control.AdminControl;
 
 
 import com.mycompany.javaweb.dao.AdminDAO;
@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +19,12 @@ import java.util.List;
 public class AdminManagementControl extends HttpServlet {
     private static final String ADMIN_PAGE = "AdminManagement.jsp";
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+
+//        if (session == null || session.getAttribute("account") == null) {
+//            response.sendRedirect("login"); 
+//            return;
+//        }
         String tab =  request.getParameter("tab");
         AdminDAO dao = new AdminDAO();
         if(tab == null){

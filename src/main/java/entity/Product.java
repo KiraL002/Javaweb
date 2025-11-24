@@ -1,5 +1,6 @@
 package com.mycompany.javaweb.entity;
 
+
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.ArrayList;

@@ -77,7 +77,8 @@
                 <thead class="bg-gray-100">
                 <tr>
                     <th class="px-4 py-2 text-left text-gray-700">STT</th>
-                    <th class="px-4 py-2 text-left text-gray-700">Tên tài khoản</th>
+                    <th class="px-4 py-2 text-left text-gray-700">Tên người dùng</th>
+                    <!--<th class="px-4 py-2 text-left text-gray-700">Tên tài khoản</th>-->
                     <th class="px-4 py-2 text-left text-gray-700">SĐT</th>
                     <th class="px-4 py-2 text-left text-gray-700">Vai trò</th>
                     <th class="px-4 py-2 text-left text-gray-700">Trạng thái</th>
@@ -91,11 +92,14 @@
                     <input type="hidden" name="userId" value="${u.userId}" />
                 <tr class="odd:bg-gray-50 even:bg-white even:hover:bg-gray-100 odd:hover:bg-gray-100">
                         <td class="px-4 py-2">${status.index+1}</td>
+<!--                        <td class="px-4 py-2">
+                            <span class="view">${u.fullName}</span>
+                            <input class="edit hidden border px-2 py-1" type="text" name="fullname" value="${u.fullName}" />
+                        </td>-->
                         <td class="px-4 py-2">
                             <span class="view">${u.username}</span>
                             <input class="edit hidden border px-2 py-1" type="text" name="username" value="${u.username}" />
                         </td>
-
                         <td class="px-4 py-2">
                             <span class="view">${u.phone}</span>
                             <input class="edit hidden border px-2 py-1" type="text" name="phone" value="${u.phone}" />
@@ -117,20 +121,17 @@
                             </select>
                         </td>
 
-                        <td class="px-4 py-2 flex space-x-2">
-
-                            <span class="view">
-                            <!-- Sửa (Edit) - màu xanh dương -->
+                        <td class="px-4 py-2 relative">
+                            <span class="view flex space-x-2">
                                 <button type="button">
                                     <i class="edit-btn fa-solid fa-pen-to-square text-blue-500 hover:text-blue-700" title="Chỉnh sửa"></i>
                                 </button>
-
-                                <!-- Xóa (Delete) - màu đỏ -->
                                 <button type="button" class="delete-btn" data-id="${u.userId}">
                                     <i class="fa-solid fa-trash text-red-500 hover:text-red-700" title="Xóa vĩnh viễn"></i>
                                 </button>
                             </span>
-                            <span class="edit hidden">
+
+                            <span class="edit hidden absolute top-1/2 -translate-y-1/2 left-4 flex space-x-2">
                                 <button type="submit" >
                                     <i class="save-btn fa-solid fa-floppy-disk text-green-500 hover:text-green-700" title="Lưu"></i>
                                 </button>
@@ -148,13 +149,13 @@
 
         </c:when>
         <c:when test="${activeTab == 'orders'}">
-            <h4 class="text-3xl md:text-4xl font-bold mb-8">
+            <h4 class="text-2xl md:text-3xl font-bold mb-8">
                 Quản lý <span class="text-[#BFA77F]">đơn hàng</span>
             </h4>
             <jsp:include page="Admin/OrderManagement.jsp" />
         </c:when>
         <c:when test="${activeTab == 'products'}">
-            <h4 class="text-3xl md:text-4xl font-bold mb-8">
+            <h4 class="text-2xl md:text-3xl font-bold mb-8">
                 Quản lý <span class="text-[#BFA77F]">sản phẩm</span>
             </h4>
         </c:when>

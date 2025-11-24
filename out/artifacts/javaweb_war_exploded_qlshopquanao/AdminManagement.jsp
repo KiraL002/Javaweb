@@ -117,20 +117,17 @@
                             </select>
                         </td>
 
-                        <td class="px-4 py-2 flex space-x-2">
-
-                            <span class="view">
-                            <!-- Sửa (Edit) - màu xanh dương -->
+                        <td class="px-4 py-2 relative">
+                            <span class="view flex space-x-2">
                                 <button type="button">
                                     <i class="edit-btn fa-solid fa-pen-to-square text-blue-500 hover:text-blue-700" title="Chỉnh sửa"></i>
                                 </button>
-
-                                <!-- Xóa (Delete) - màu đỏ -->
                                 <button type="button" class="delete-btn" data-id="${u.userId}">
                                     <i class="fa-solid fa-trash text-red-500 hover:text-red-700" title="Xóa vĩnh viễn"></i>
                                 </button>
                             </span>
-                            <span class="edit hidden">
+
+                            <span class="edit hidden absolute top-1/2 -translate-y-1/2 left-4 flex space-x-2">
                                 <button type="submit" >
                                     <i class="save-btn fa-solid fa-floppy-disk text-green-500 hover:text-green-700" title="Lưu"></i>
                                 </button>
@@ -148,13 +145,13 @@
 
         </c:when>
         <c:when test="${activeTab == 'orders'}">
-            <h4 class="text-3xl md:text-4xl font-bold mb-8">
+            <h4 class="text-2xl md:text-3xl font-bold mb-8">
                 Quản lý <span class="text-[#BFA77F]">đơn hàng</span>
             </h4>
             <jsp:include page="Admin/OrderManagement.jsp" />
         </c:when>
         <c:when test="${activeTab == 'products'}">
-            <h4 class="text-3xl md:text-4xl font-bold mb-8">
+            <h4 class="text-2xl md:text-3xl font-bold mb-8">
                 Quản lý <span class="text-[#BFA77F]">sản phẩm</span>
             </h4>
         </c:when>

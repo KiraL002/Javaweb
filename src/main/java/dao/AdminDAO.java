@@ -1,5 +1,6 @@
 package com.mycompany.javaweb.dao;
 
+
 import com.mycompany.javaweb.context.DBContext;
 import com.mycompany.javaweb.entity.Account;
 import com.mycompany.javaweb.entity.Order;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utils.StringUtils;
 
 public class AdminDAO {
     Connection conn = null;
@@ -69,7 +71,11 @@ public class AdminDAO {
 //   ----------------- ORDERS -------------------
 
     public List<Order> getAllOrders() {
-        String query = "SELECT * FROM donhang order by ngaytao desc";
+        String query = """
+                       SELECT * FROM donhang dh 
+                       join nguoidung nd on dh.maKH = nd.maND 
+                       order by dh.ngaytao desc
+                   """;
         List<Order> res = new ArrayList<>();
         try{
             conn = DBContext.getConnection();
@@ -86,6 +92,39 @@ public class AdminDAO {
             closeConnections();
         }
         return res;
+    }
+    public void updateOrder(String id,String status,String paymentMethod){
+        StringBuilder query = new StringBuilder("""
+                       UPDATE donhang SET
+                       """);
+        List<String> params = new ArrayList<>();
+        if(!StringUtils.isEmpty(status)){
+            query.append(" trangThai = ? ");
+            params.add(status);
+        }
+        if(!StringUtils.isEmpty(paymentMethod)){
+            if(params.size()>0) query.append(",");
+            query.append(" phuongThucThanhToan = ? ");
+            params.add(paymentMethod);
+        }
+        if (params.isEmpty()) {
+            return;
+        }
+        query.append(" WHERE maDH = ?");
+        params.add(id);
+        try{
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query.toString());
+            for(int i=0; i<params.size(); i++){
+                ps.setString(i+1,params.get(i));
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e){
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, "Lỗi SQL trong removeCartItem", e);
+        } finally { 
+            closeConnections();
+        }
     }
 
 //   ------------------- MAP ----------------------
@@ -111,12 +150,13 @@ public class AdminDAO {
     }
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
         Order o = new Order();
-        o.setOrderNumber(String.valueOf(rs.getLong("maDH"))); // chuyển BIGINT sang String
+        o.setOrderId(rs.getLong("maDH"));
+        o.setUserId(rs.getLong("maKH"));
         o.setUserEmail(rs.getString("email"));
 
         // Nếu bạn có bảng chi tiết giỏ hàng, items có thể load sau
         o.setItems(null); // hoặc gọi hàm loadCartItems(maDH)
-
+        o.setUserName(rs.getString("hoTen"));
         o.setSubtotal(rs.getLong("tongTien")); // tạm set subtotal = total nếu chưa có shipping
         o.setShipping(0); // nếu chưa có thông tin shipping
         o.setTotal(rs.getLong("tongTien")); // total = tongTien trong DB

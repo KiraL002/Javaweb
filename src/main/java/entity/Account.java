@@ -1,5 +1,6 @@
 package com.mycompany.javaweb.entity;
 
+
 import java.util.Date;
 // MỚI: Thêm import này
 import java.io.Serializable;
