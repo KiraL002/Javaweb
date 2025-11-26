@@ -69,7 +69,7 @@ public class AdminDAO {
 //   ----------------- ORDERS -------------------
 
     public List<Order> getAllOrders() {
-        String query = "SELECT * FROM donhang order by ngaytao desc";
+        String query = "SELECT * FROM orders order by ngaytao desc";
         List<Order> res = new ArrayList<>();
         try{
             conn = DBContext.getConnection();
@@ -111,15 +111,15 @@ public class AdminDAO {
     }
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
         Order o = new Order();
-        o.setOrderNumber(String.valueOf(rs.getLong("maDH"))); // chuyển BIGINT sang String
+        o.setOrderNumber(rs.getString("order_id")); // dùng order_id VARCHAR
         o.setUserEmail(rs.getString("email"));
+        
+// Nếu bạn có bảng chi tiết giỏ hàng, items có thể load sau
+        o.setItems(null); // hoặc gọi hàm loadCartItems(order_id)
 
-        // Nếu bạn có bảng chi tiết giỏ hàng, items có thể load sau
-        o.setItems(null); // hoặc gọi hàm loadCartItems(maDH)
-
-        o.setSubtotal(rs.getLong("tongTien")); // tạm set subtotal = total nếu chưa có shipping
-        o.setShipping(0); // nếu chưa có thông tin shipping
-        o.setTotal(rs.getLong("tongTien")); // total = tongTien trong DB
+        o.setSubtotal(rs.getLong("subtotal")); // Tổng tiền chưa tính shipping
+        o.setShipping(rs.getLong("shipping")); // Phí vận chuyển
+        o.setTotal(rs.getLong("tongTien")); // Tổng tiền gồm phí vận chuyển
 
         o.setCreatedDate(rs.getTimestamp("ngayTao")); // Timestamp -> java.util.Date
         o.setStatus(rs.getString("trangThai"));
@@ -129,7 +129,11 @@ public class AdminDAO {
         o.setPaymentMethod(rs.getString("phuongThucThanhToan"));
 
         return o;
-    }
+    
+
+    
+
+}
 
     private void closeConnections() {
         try {
