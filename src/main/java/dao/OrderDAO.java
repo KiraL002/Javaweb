@@ -48,18 +48,23 @@ public class OrderDAO {
 
     // Xóa đơn hàng
     public boolean deleteOrder(String orderId) {
-        String query = "DELETE FROM Orders WHERE order_id=?";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        boolean deleted = false;
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, orderId);
-            return ps.executeUpdate() > 0;
+            deleted = ps.executeUpdate() > 0;
 
-        } catch(SQLException e) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, "Lỗi khi xóa đơn hàng", e);
-            return false;
+        } catch (SQLException e) {
+            Logger.getLogger(AdminDAO.class.getName()).log(Level.SEVERE, "Lỗi khi xóa order với order_id: " + orderId, e);
         }
-    }
+
+        return deleted;
+    
+
+    
+
+}
+
 
     // Map ResultSet -> Order object
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {

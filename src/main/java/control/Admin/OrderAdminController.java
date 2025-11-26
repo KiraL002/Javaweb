@@ -41,7 +41,24 @@ public class OrderAdminController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String orderId = req.getParameter("orderId");
+        resp.setContentType("application/json;charset=UTF-8");
+        
+if (orderId == null || orderId.isEmpty()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"message\":\"orderId is required\"}");
+            return;
+        }
+
         boolean deleted = orderDAO.deleteOrder(orderId);
-        resp.setStatus(deleted ? 200 : 500);
-    }
+        if (deleted) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write("{\"message\":\"Order deleted successfully\"}");
+        } else {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().write("{\"message\":\"Failed to delete order\"}");
+        }
+    
+
+}
+
 }

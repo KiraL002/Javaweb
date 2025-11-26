@@ -100,7 +100,7 @@
         btn.addEventListener("click", () => {
             const orderNumber = btn.getAttribute("data-id");
             if (confirm("Bạn có chắc muốn xóa đơn hàng " + orderNumber + " này không?")) {
-                fetch("/admin/orders?orderNumber=" + orderNumber, { method: "DELETE" })
+                fetch("/javaweb/admin/orders?orderId=" + orderNumber, { method: "DELETE" })
                     .then(response => {
                         if (response.ok) btn.closest("tr").remove();
                         else alert("Xóa đơn hàng thất bại!");
