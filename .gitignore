@@ -1,1 +1,16 @@
-/target/
+# Chặn file cấu hình IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Chặn file cấu hình Tomcat riêng
+.smarttomcat/
+
+# Chặn thư mục biên dịch (Rác nặng)
+target/
+out/
+build/
+
+# File tạm hệ thống
+.DS_Store
+Thumbs.db

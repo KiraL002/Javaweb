@@ -1,4 +1,4 @@
-package com.mycompany.javaweb.dao; // Đảm bảo Gói của bạn là đúng
+package com.mycompany.javaweb.dao;
 
 import com.mycompany.javaweb.context.DBContext;
 import com.mycompany.javaweb.entity.Account;
@@ -215,6 +215,7 @@ public class DAO {
         return null; // Sai tên đăng nhập hoặc mật khẩu
     }
 
+
     public boolean checkAccountExists(String username) {
         String query = "SELECT COUNT(*) FROM NguoiDung WHERE tenDangNhap = ?";
         try {
@@ -293,7 +294,6 @@ public class DAO {
         }
     }
 
-
     public boolean checkOldPassword(long userId, String oldPassword) {
         String query = "SELECT matKhau FROM NguoiDung WHERE maND = ?";
         try {
@@ -321,9 +321,10 @@ public class DAO {
         } catch (SQLException e) { Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, e); } 
         finally { closeConnections(); }
     }
-    
-    public void updateAccountInfo(long userId, String fullName, String phone, String address) { /* ... (giữ nguyên) ... */ }
-    
+    public void updateAccountInfo(long userId, String fullName, String phone, String address) {
+        //Chua lam
+    }
+
     // --- (Các hàm còn lại giữ nguyên) ---
     public List<Order> getOrdersByUserEmail(String userEmail) { return new ArrayList<>(); }
     public void clearCart(String userEmail) { }
@@ -591,10 +592,108 @@ public class DAO {
         acc.setPhone(rs.getString("soDienThoai"));
         acc.setCreatedDate(rs.getTimestamp("ngayTao"));
         acc.setRole(rs.getString("vaiTro"));
-        
+        acc.setStatus(rs.getString("trangThai"));
+
         acc.setCustomerId(rs.getLong("maKH"));
         acc.setPoints(rs.getInt("diemTichLuy"));
         
         return acc;
     }
+
+    // ======================================================================
+    // === CÁC HÀM ĐƠN HÀM
+    // ======================================================================
+
+    private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
+            Order o = new Order();
+            o.setOrderNumber(String.valueOf(rs.getLong("maDH"))); // chuyển BIGINT sang String
+            o.setUserEmail(rs.getString("email"));
+
+            // Nếu bạn có bảng chi tiết giỏ hàng, items có thể load sau
+            o.setItems(null); // hoặc gọi hàm loadCartItems(maDH)
+
+            o.setSubtotal(rs.getLong("tongTien")); // tạm set subtotal = total nếu chưa có shipping
+            o.setShipping(0); // nếu chưa có thông tin shipping
+            o.setTotal(rs.getLong("tongTien")); // total = tongTien trong DB
+
+            o.setCreatedDate(rs.getTimestamp("ngayTao")); // Timestamp -> java.util.Date
+            o.setStatus(rs.getString("trangThai"));
+
+            o.setShippingAddress(rs.getString("diaChi"));
+            o.setPhone(rs.getString("soDienThoai"));
+            o.setPaymentMethod(rs.getString("phuongThucThanhToan"));
+
+            return o;
+        }
+// ===================================================
+    // === BỘ TỨ SIÊU ĐẲNG CHO ADMIN (CRUD) ===
+    // ===================================================
+    // Bui Thai Son
+    // 1. XÓA sản phẩm
+    public void deleteProduct(String pid) {
+        String query = "DELETE FROM SanPham WHERE maSP = ?";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, pid);
+            ps.executeUpdate();
+        } catch (Exception e) {}
+    }
+
+    // 2. THÊM MỚI sản phẩm
+    public void insertProduct(String name, String image, String price, String title, String description, String category, String stock) {
+        String query = "INSERT INTO SanPham (ten, hinhAnh, gia, moTa, maDM, soLuong) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, image);
+            ps.setString(3, price);
+            ps.setString(4, description);
+            ps.setString(5, category);
+            ps.setString(6, stock);
+            ps.executeUpdate();
+        } catch (Exception e) {}
+    }
+
+    // 3. LẤY 1 SẢN PHẨM (Để hiện lên form sửa)
+    public Product getProductByID(String id) {
+        String query = "SELECT * FROM SanPham WHERE maSP = ?";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return mapResultSetToProduct(rs);
+            }
+        } catch (Exception e) {}
+        return null;
+    }
+
+    // 4. CẬP NHẬT (SỬA) sản phẩm
+    public void updateProduct(String id, String name, String image, String price, String description, String category, String stock, String sold) {
+        // Câu lệnh SQL đã thêm đoạn "daBan=?"
+        String query = "UPDATE SanPham SET ten=?, hinhAnh=?, gia=?, moTa=?, maDM=?, soLuong=?, daBan=? WHERE maSP=?";
+
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, image);
+            ps.setString(3, price);
+            ps.setString(4, description);
+            ps.setString(5, category);
+            ps.setString(6, stock);
+            ps.setString(7, sold); // Tham số thứ 7 là số lượng đã bán
+            ps.setString(8, id);   // Tham số thứ 8 là ID sản phẩm (WHERE maSP = ?)
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            // e.printStackTrace(); // Bật cái này lên nếu muốn xem lỗi chi tiết trong console
+        } finally {
+            // closeConnections(); // Nhớ đóng kết nối nếu có hàm này
+        }
+    }
+
 }

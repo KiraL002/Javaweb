@@ -51,7 +51,7 @@ public class StockDAO {
 
     // --- TẠO ORDER MỚI ---
     public void createOrder(Order order, long maKH) {
-        String insertOrder = "INSERT INTO Orders(order_id, maKH, user_email, subtotal, shipping, total, created_date, status, shipping_address, phone, payment_method) "
+        String insertOrder = "INSERT INTO Orders(order_id, maKH, email, subtotal, shipping, tongTien, ngayTao, trangThai, diaChi, soDienThoai, phuongThucThanhToan) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         try {
             conn = DBContext.getConnection();
@@ -71,13 +71,15 @@ public class StockDAO {
 
             // --- Thêm chi tiết đơn hàng ---
             for (CartItem item : order.getItems()) {
-                String insertItem = "INSERT INTO OrderItems(order_id, maSP, soLuong, size, color) VALUES(?,?,?,?,?)";
+                String insertItem = "INSERT INTO OrderItems(order_id, maSP, soLuong, kichCo, mauSac, donGia, thanhTien) VALUES(?,?,?,?,?,?,?)";
                 try (PreparedStatement psItem = conn.prepareStatement(insertItem)) {
                     psItem.setString(1, order.getOrderNumber());
                     psItem.setLong(2, item.getProductId());
                     psItem.setInt(3, item.getQuantity());
                     psItem.setString(4, item.getSize());
                     psItem.setString(5, item.getColor());
+                    psItem.setLong(6, order.getSubtotal());
+                    psItem.setLong(7, order.getTotal());
                     psItem.executeUpdate();
                 }
             }

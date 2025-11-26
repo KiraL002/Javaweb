@@ -24,7 +24,7 @@ public class Account implements Serializable { // <-- ĐÃ THÊM
     private String phone; // soDienThoai
     private Date createdDate; // ngayTao
     private String role; // vaiTro ('ADMIN' hoặc 'USER')
-    
+    private String status;
     // Thuộc tính từ KhachHang
     private long customerId; // maKH
     private int points; // diemTichLuy
@@ -92,5 +92,13 @@ public class Account implements Serializable { // <-- ĐÃ THÊM
     public String getEmail() {
         // Tạm thời trả về username, vì CSDL của bạn không có trường email riêng
         return this.username; 
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
