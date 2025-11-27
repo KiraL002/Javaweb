@@ -16,6 +16,43 @@ public class StockDAO {
     private Connection conn = null;
     private PreparedStatement ps = null;
     private ResultSet rs = null;
+    // LẤY DANH SÁCH ORDER THEO maKH
+
+    public List<Order> getOrdersByCustomer(long maKH) {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM Orders WHERE maKH = ? ORDER BY ngayTao DESC";
+
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setLong(1, maKH);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order(
+                        rs.getString("order_id"),
+                        rs.getString("email"),
+                        getOrderItems(rs.getString("order_id")),
+                        rs.getLong("subtotal"),
+                        rs.getLong("shipping"),
+                        rs.getLong("tongTien"),
+                        rs.getTimestamp("ngayTao"),
+                        rs.getString("trangThai"),
+                        rs.getString("diaChi"),
+                        rs.getString("soDienThoai"),
+                        rs.getString("phuongThucThanhToan")
+                );
+                orders.add(order);
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(StockDAO.class.getName()).log(Level.SEVERE, "Lỗi lấy danh sách orders", e);
+        } finally {
+            closeConnections();
+        }
+
+        return orders;
+    }
 
     // --- LẤY ORDER THEO ORDER NUMBER ---
     public Order getOrderByNumber(String orderNumber) {

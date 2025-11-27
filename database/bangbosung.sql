@@ -1,6 +1,7 @@
 use clothing_shop;
 -- tôi thử thêm dữ liệu bào bảng có sẵn trong database nhưng ko được nên tạo thêm bảng này á 
 -- bảng này chỉ khác có mỗi order_id và maDH thoi về cách tạo mấy cái khác thì hơi khác tên 1 xíu nhé
+-- đổi tên Orders->DonHang
 CREATE TABLE Orders (
     order_id VARCHAR(255) PRIMARY KEY,  -- order_id là khóa chính, có thể là mã đơn hàng (ví dụ: MAU123456)
     email VARCHAR(100),

@@ -64,7 +64,28 @@ public class OrderDAO {
     
 
 }
+    // OrderDAO.java (Thêm vào class này)
 
+    public List<Order> getOrdersByCustomer(long maKH) {
+        List<Order> orders = new ArrayList<>();
+        // Kiểm tra chính xác tên cột 'maKH' trong bảng Orders của bạn
+        String query = "SELECT * FROM Orders WHERE maKH = ? ORDER BY ngayTao DESC";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setLong(1, maKH);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    orders.add(mapResultSetToOrder(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, "Lỗi khi lấy orders theo maKH", e);
+        }
+        return orders;
+    }
 
     // Map ResultSet -> Order object
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
