@@ -34,7 +34,7 @@ public class OrderAdminController extends HttpServlet {
 
         orderDAO.updateOrder(orderId, phone, status);
 
-        resp.sendRedirect(req.getContextPath() + "/admin/orders");
+        resp.sendRedirect(req.getContextPath() + "/admin?tab=orders");
     }
 
     // Xóa đơn hàng (AJAX)
