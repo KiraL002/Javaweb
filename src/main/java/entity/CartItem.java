@@ -1,4 +1,5 @@
 package com.mycompany.javaweb.entity;
+import com.mycompany.javaweb.entity.Product;
 
 /**
  * FILE NÀY THAY THẾ HOÀN TOÀN FILE CŨ.

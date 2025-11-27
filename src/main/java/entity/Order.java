@@ -1,7 +1,9 @@
 package com.mycompany.javaweb.entity;
 
+
 import java.util.Date;
 import java.util.List;
+import com.mycompany.javaweb.entity.CartItem;
 
 /**
  * Entity cho Đơn hàng
@@ -9,24 +11,32 @@ import java.util.List;
  */
 public class Order {
     private String orderNumber;
-    // THAY ĐỔI: từ int id -> String
+    private long orderId;
+
+    //    Thông tin người đặt
+    private long userId;
     private String userEmail;
+    private String userName;
+
+    //    Thông tin đơn hàng
     private List<CartItem> items;
     private long subtotal;
     private long shipping;
     private long total;
     private Date createdDate;
     private String status;
-    
-    // CÁC TRƯỜNG MỚI TỪ JSON
+
+
+
+
     private String shippingAddress;
     private String phone;
     private String paymentMethod;
 
     public Order() {}
     // Hàm tạo (constructor) đã được cập nhật
-    public Order(String orderNumber, String userEmail, List<CartItem> items, 
-                 long subtotal, long shipping, long total, Date createdDate, 
+    public Order(String orderNumber, String userEmail, List<CartItem> items,
+                 long subtotal, long shipping, long total, Date createdDate,
                  String status, String shippingAddress, String phone, String paymentMethod) {
         this.orderNumber = orderNumber;
         this.userEmail = userEmail;
@@ -40,9 +50,32 @@ public class Order {
         this.phone = phone;
         this.paymentMethod = paymentMethod;
     }
+    public long getOrderId() { return orderId; }
 
-    // --- Getters and Setters (Bao gồm các trường mới) ---
-    public String getOrderNumber() { return orderNumber; }
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
     public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
     public String getUserEmail() { return userEmail; }
     public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
@@ -64,5 +97,6 @@ public class Order {
     public void setPhone(String phone) { this.phone = phone; }
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+
 }
 

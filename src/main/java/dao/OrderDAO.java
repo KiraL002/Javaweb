@@ -2,6 +2,7 @@ package com.mycompany.javaweb.dao;
 
 import com.mycompany.javaweb.context.DBContext;
 import com.mycompany.javaweb.entity.Order;
+import com.mycompany.javaweb.dao.AdminDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -59,11 +60,11 @@ public class OrderDAO {
         }
 
         return deleted;
-    
 
-    
 
-}
+
+
+    }
     // OrderDAO.java (Thêm vào class này)
 
     public List<Order> getOrdersByCustomer(long maKH) {

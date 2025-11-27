@@ -1,64 +1,62 @@
-package com.mycompany.javaweb.control;
+package com.mycompany.javaweb.control.AdminControl;
 
-import com.mycompany.javaweb.dao.OrderDAO;
+import com.mycompany.javaweb.dao.AdminDAO;
+import com.mycompany.javaweb.entity.Account;
 import com.mycompany.javaweb.entity.Order;
-
+import com.mycompany.javaweb.entity.OrderItem;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import com.mycompany.javaweb.utils.StringUtils;
 
-@WebServlet("/admin/orders")
+@WebServlet(urlPatterns = "/admin/order/*")
 public class OrderAdminController extends HttpServlet {
+    private AdminDAO dao = new AdminDAO();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException, ServletException{
+        HttpSession session = request.getSession(false);
 
-    private OrderDAO orderDAO = new OrderDAO();
-
-    // Hiển thị danh sách đơn hàng
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Order> orders = orderDAO.getAllOrders();
-        req.setAttribute("orders", orders);
-        req.getRequestDispatcher("/admin/order-management.jsp").forward(req, resp);
-    }
-
-    // Cập nhật đơn hàng
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String orderId = req.getParameter("orderId");
-        String phone = req.getParameter("phone");
-        String status = req.getParameter("status");
-
-        orderDAO.updateOrder(orderId, phone, status);
-
-        resp.sendRedirect(req.getContextPath() + "/admin/orders");
-    }
-
-    // Xóa đơn hàng (AJAX)
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String orderId = req.getParameter("orderId");
-        resp.setContentType("application/json;charset=UTF-8");
-        
-if (orderId == null || orderId.isEmpty()) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("{\"message\":\"orderId is required\"}");
+        if (session == null || session.getAttribute("account") == null) {
+            response.sendRedirect("login");
             return;
         }
 
-        boolean deleted = orderDAO.deleteOrder(orderId);
-        if (deleted) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write("{\"message\":\"Order deleted successfully\"}");
-        } else {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("{\"message\":\"Failed to delete order\"}");
+        Account acc = (Account) session.getAttribute("account");
+        String accRole = acc.getRole();
+//        if (!"ADMIN".equals(accRole)){
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Mã 403: Cấm
+//            response.getWriter().write("Bạn không có quyền truy cập!");
+//        }
+
+        //        Xử lí orderDetail
+        String path = request.getPathInfo(); // id: "/123"
+        if(path !=null && path.length() > 1){
+            String Id = path.substring(1);
+            Order order = dao.getOrderById(Id);
+            List<OrderItem> orderItems = dao.getOrderItemsByOrderId(Id);
+            System.out.println(Id);
+            request.setAttribute("order",order);
+            request.setAttribute("items", orderItems);
         }
-    
+        request.getRequestDispatcher("/Admin/OrderDetailManagment.jsp").forward(request, response);
+    }
 
-}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+        request.setCharacterEncoding("UTF-8");
 
+//        request
+        String orderId = request.getParameter("orderId");
+        String status = request.getParameter("status");
+        String paymentMethod = request.getParameter("paymentMethod");
+        if(!StringUtils.isEmpty(status) || !StringUtils.isEmpty(paymentMethod)){
+            dao.updateOrder(orderId, status, paymentMethod);
+        }
+
+        response.sendRedirect("/admin?tab=orders");
+    }
 }
