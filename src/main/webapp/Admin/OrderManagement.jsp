@@ -38,7 +38,7 @@
                     </td>
                     
                     <td class="px-4 py-2">
-                        <form action="admin/orders" method="post">
+                        <form action="admin/order" method="post">
                              <input type="hidden" name="orderId" value="${o.orderId}" />     
                              <select class="border px-2 py-1 " name="status"onchange="this.form.submit()">
                                  <option value="PENDING" ${o.status=='PENDING' ? 'selected' : ''}>Chờ xác nhận</option>
@@ -50,7 +50,7 @@
                          </form>
                     </td>
                     <td class="px-4 py-2">
-                        <form action="admin/orders" method="post">
+                        <form action="admin/order" method="post">
                             <input type="hidden" name="orderId" value="${o.orderId}"/>
                             <select class="border px-2 py-1" name="paymentMethod"onchange="this.form.submit()">
                                 <option value="CASH" ${o.paymentMethod=="CASH" ? 'selected' : '' }>Thanh toán khi nhận hàng</option>

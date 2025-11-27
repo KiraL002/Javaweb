@@ -41,14 +41,31 @@
                         <td class="px-4 py-2 font-semibold bg-gray-50 w-1/4">SĐT:</td>
                         <td class="px-4 py-2">${order.phone}</td>
                     </tr>
-                    <tr>
-                        <td class="px-4 py-2 font-semibold bg-gray-50 w-1/4">Phương thức thanh toán:</td>
-                        <td class="px-4 py-2">${order.paymentMethod}</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 font-semibold bg-gray-50 w-1/4">Trạng thái:</td>
-                        <td class="px-4 py-2 font-bold">${order.status}</td>
-                    </tr>
+                  <tr>
+                    <td class="px-4 py-2 font-semibold bg-gray-50 w-1/4">Phương thức thanh toán:</td>
+                    <td class="px-4 py-2">
+                        <c:choose>
+                            <c:when test="${order.paymentMethod == 'CASH'}">Thanh toán khi nhận hàng</c:when>
+                            <c:when test="${order.paymentMethod == 'TRANSFER'}">Chuyển khoản</c:when>
+                            <c:otherwise>Khác</c:otherwise>
+                        </c:choose>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="px-4 py-2 font-semibold bg-gray-50 w-1/4">Trạng thái:</td>
+                    <td class="px-4 py-2 font-bold">
+                        <c:choose>
+                            <c:when test="${order.status == 'PENDING'}">Chờ xác nhận</c:when>
+                            <c:when test="${order.status == 'SHIPPED'}">Đang giao</c:when>
+                            <c:when test="${order.status == 'DELIVERED'}">Giao thành công</c:when>
+                            <c:when test="${order.status == 'CANCELLED'}">Đã hủy</c:when>
+                            <c:when test="${order.status == 'RETURNED'}">Trả hàng hoàn tiền</c:when>
+                            <c:otherwise>Không xác định</c:otherwise>
+                        </c:choose>
+                    </td>
+                </tr>
+
                 </tbody>
             </table>
 

@@ -1,6 +1,7 @@
 package com.mycompany.javaweb.control.AdminControl;
 
 import com.mycompany.javaweb.dao.AdminDAO;
+import com.mycompany.javaweb.entity.Account;
 import com.mycompany.javaweb.entity.Order;
 import entity.OrderItem;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -17,7 +19,21 @@ import utils.StringUtils;
 public class OrderAdminController extends HttpServlet {
     private AdminDAO dao = new AdminDAO();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException, ServletException{
-        //        Xử lí orderDetail
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("account") == null) {
+            response.sendRedirect("login"); 
+            return;
+        }
+        
+        Account acc = (Account) session.getAttribute("account");
+        String accRole = acc.getRole();
+//        if (!"ADMIN".equals(accRole)){
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Mã 403: Cấm
+//            response.getWriter().write("Bạn không có quyền truy cập!");
+//        }
+
+    //        Xử lí orderDetail
         String path = request.getPathInfo(); // id: "/123"
         if(path !=null && path.length() > 1){
             String Id = path.substring(1);

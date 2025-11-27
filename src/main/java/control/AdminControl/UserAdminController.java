@@ -16,6 +16,8 @@ import java.io.IOException;
 public class UserAdminController  extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8"); 
+        response.setCharacterEncoding("UTF-8");
         Long userId = Long.valueOf(request.getParameter("userId"));
         
 //        Kiểm tra có đang chỉnh quyền của chính mình ko 
@@ -25,12 +27,23 @@ public class UserAdminController  extends HttpServlet {
             response.sendRedirect("login"); 
             return;
         }
-        Account acc = (Account) session.getAttribute("account");
-//        Lấy dữ liệu được chỉnh sửa
+        
+        //        Lấy dữ liệu được chỉnh sửa
         String username = request.getParameter("username");
         String phone = request.getParameter("phone");
         String role = request.getParameter("role");
         String status = request.getParameter("status");
+        
+        // KIỂM TRA QUYỀN VÀ TRẢ LỜI NGAY NẾU KHÔNG PHẢI ADMIN
+        Account acc = (Account) session.getAttribute("account");
+        String accRole = acc.getRole();
+        if (!"ADMIN".equals(accRole) || acc.getUsername().equals(username)) { 
+            // Thiết lập trạng thái lỗi và gửi thông báo
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Mã 403: Cấm
+            response.getWriter().write("Bạn không có quyền thay đổi!"); // Gửi thông báo về client
+            return; 
+        }
+        
 
 //        Cập nhật
         AdminDAO dao = new AdminDAO();
