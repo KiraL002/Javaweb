@@ -25,6 +25,23 @@ public class UserAdminController extends HttpServlet {
             String role = request.getParameter("role");
             String status = request.getParameter("status");
 
+            //        Kiểm tra có đang chỉnh quyền của chính mình ko
+            HttpSession session = request.getSession(false);
+            Account acc = (Account) session.getAttribute("account");
+            // ko phải admin
+            if (!"ADMIN".equals(acc.getRole())) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("Bạn không có quyền thay đổi!");
+                return;
+            }
+    
+            // không được đổi role của chính mình
+            if (acc.getUserId() == userId) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("Bạn không thể chỉnh sửa chính mình!");
+                return;
+            }
+            
             // Cập nhật
             AdminDAO dao = new AdminDAO();
             dao.updateAccountInfo(userId, username, phone, role, status);
