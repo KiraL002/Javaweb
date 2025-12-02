@@ -54,7 +54,25 @@ public class AdminDAO {
         } catch (SQLException e) { Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, e); }
         finally { closeConnections(); }
     }
+    public Account getAccountById(Long id) {
+        String query = "SELECT * FROM NguoiDung nd LEFT JOIN KhachHang kh ON nd.maND = kh.maND WHERE nd.maND = ?";
 
+        try{
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setLong(1,id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToAccount(rs);
+            }
+        }
+        catch (SQLException e) {
+            Logger.getLogger(AdminDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            closeConnections();
+        }
+        return null;
+    }
     public boolean  deleteAccount(long userId) {
         String query = "DELETE FROM NguoiDung WHERE maND = ?";
         try{
